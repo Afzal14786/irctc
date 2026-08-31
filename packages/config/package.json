@@ -1,0 +1,11 @@
+{
+  "name": "@irctc/config",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "type": "module",
+  "dependencies": {
+    "@irctc/http": "workspace:*",
+    "dotenv": "^17.4.2",
+    "zod": "^4.5.4"
+  }
+}

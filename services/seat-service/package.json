@@ -1,0 +1,15 @@
+{
+  "name": "@irctc/seat-service",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "@irctc/http": "workspace:*",
+    "@irctc/errors": "workspace:*"
+  }
+}

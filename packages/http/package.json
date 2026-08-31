@@ -1,0 +1,7 @@
+{
+  "name": "@irctc/http",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "type": "module",
+  "dependencies": {}
+}

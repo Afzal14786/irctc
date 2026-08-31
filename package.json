@@ -1,0 +1,56 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "IRCTC-style train booking platform backend",
+  "author": "Md Afzal Ansari",
+  "license": "ISC",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.24.0",
+
+  "scripts": {
+    "dev:gateway": "pnpm --filter @irctc/api-gateway dev",
+    "dev:auth": "pnpm --filter @irctc/auth-service dev",
+    "dev:user": "pnpm --filter @irctc/user-service dev",
+    "dev:search" : "pnpm --filter @irctc/search-service dev",
+    "dev:train": "pnpm --filter @irctc/train-service dev",
+    "dev:seat": "pnpm --filter @irctc/seat-service dev",
+    "dev:booking": "pnpm --filter @irctc/booking-service dev",
+    "dev:route": "pnpm --filter @irctc/route-service dev",
+    "dev:station": "pnpm --filter @irctc/station-service dev",
+    "dev:notification": "pnpm --filter @irctc/notification-service dev",
+    "dev:payment": "pnpm --filter @irctc/payment-service dev",
+
+    "dev": "pnpm --parallel --filter @irctc/api-gateway --filter @irctc/auth-service --filter @irctc/user-service dev",
+
+    "db:generate": "pnpm --filter @irctc/database exec drizzle-kit generate",
+    "db:migrate": "pnpm --filter @irctc/database exec drizzle-kit migrate",
+
+    "docker:up": "docker compose -f infrastructure/docker/docker-compose.yml up --build",
+    "docker:down": "docker compose -f infrastructure/docker/docker-compose.yml down",
+    "docker:logs": "docker compose -f infrastructure/docker/docker-compose.yml logs -f"
+  },
+
+  "engines": {
+    "node": ">=22.13.0",
+    "pnpm": ">=11.24.0"
+  },
+
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=22.13.0",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.24.0",
+      "onFail": "error"
+    }
+  },
+
+  "devDependencies": {
+    "eslint": "^9.9.0",
+    "prettier": "^3.3.3"
+  }
+}
