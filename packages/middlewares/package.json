@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "type": "module",
-  "dependencies": {}
+  "dependencies": {
+    "@irctc/config": "workspace:*",
+    "zod": "^4.5.4"
+  }
 }
