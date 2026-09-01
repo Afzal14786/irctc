@@ -7,7 +7,7 @@
 ## Initial thoughts
 
 - I chalange this on **August 31, 2026 Monday**. And I don't know how much time it will take to complete this but yes I will complete this ASAP.
-- And also I commit a chalange, that I am not going use any **AI agent for coding**, off course for **research** I may use AI and I'll mention in this markdown exact which point I have used AI but for **coding**, definitely I am **not** going to use any AI agencts. 
+- And also I commit a chalange, that I am not going use any **AI agent for coding**, off course for **research** I may use AI and I'll mention in this markdown exact which point I have used AI but for **coding**, definitely I am **not** going to use any AI agents. 
 - The agenda of this project is to make myself comfortable with **backend engineering** and converting **my own thoughts** into **code** and then code will **convert into a virtual world**.  
 
 ## First Challange that i faced
@@ -243,3 +243,14 @@ services/auth-service/
 - now we should start by first setting up the folder structure and then first code few common files like we describe just above.
 
 --- 
+
+## This is day 2 : 1st September 2026  
+
+**Today i am going to code the authentiation and user service**  
+
+- what is the things we are going to do here 
+- very first things I am going to do is :
+    - designing the database for authentication and user service but how ?
+    - the real question is how we can saperate the tables means is authentication and user tables is going to be seprate ?
+    - or how we gonna decide things will handle and store and exactly what are the `attributes` we gonna define and definitely we are going to use AI here to understand the sepration of tables and implementation in a **micro services architecture**.  
+
