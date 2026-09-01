@@ -1,1 +1,1 @@
-// this will export all the schemas
+export * from "./schemas/index.js";  // this will export all the schemas from here 
