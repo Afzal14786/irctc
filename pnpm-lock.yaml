@@ -256,6 +256,14 @@ importers:
 
   packages/http: {}
 
+  packages/logger: {}
+
+  packages/middlewares: {}
+
+  packages/redis: {}
+
+  packages/utils: {}
+
   services/auth-service:
     dependencies:
       '@irctc/config':
