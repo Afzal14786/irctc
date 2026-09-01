@@ -308,11 +308,11 @@ till now i define the databases means i decided the number of tables and the att
 | Column            | Type                     | Constraints / Description                               |
 | ----------------- | ------------------------ | ------------------------------------------------------- |
 | `id`              | `UUID` / `BIGINT`        | Primary Key                                             |
-| `email`           | `VARCHAR(255)`           | Unique, Not Null                                        |
-| `password_hash`   | `VARCHAR(255)`           | Hashed password                                         |
+| `email`           | `text(255)`           | Unique, Not Null                                        |
+| `password_hash`   | `text(255)`           | Hashed password                                         |
 | `is_email_verified`| `BOOLEAN`                | Default: `false`                                        |
-| `role`            | `VARCHAR(50)`            | e.g., `'admin'`, `'user'`                               |
-| `status`          | `VARCHAR(50)`            | e.g., `'active'`, `'suspended'`, `'banned'`            |
+| `role`            | `ENUM["ADMIN", "USER"]`            | e.g., `'ADMIN'`, `'USER'`                               |
+| `status`          | `ENUM["ACTIVE", "SUSPENDED", "BANNED"]`            | e.g., `'active'`, `'suspended'`, `'banned'`            |
 | `last_login_at`   | `TIMESTAMP`              | Nullable                                                |
 | `created_at`      | `TIMESTAMP`              | Default: `CURRENT_TIMESTAMP`                            |
 | `updated_at`      | `TIMESTAMP`              | Auto-updated on row change                              |
@@ -325,7 +325,7 @@ till now i define the databases means i decided the number of tables and the att
 | ------------ | ----------------- | ----------------------------------------------- |
 | `id`         | `UUID` / `BIGINT` | Primary Key                                     |
 | `user_id`    | `UUID` / `BIGINT` | Foreign Key → `auth_users(id)` `ON DELETE CASCADE` |
-| `token_hash` | `VARCHAR(255)`    | Hashed refresh token, Unique                    |
+| `token_hash` | `text(255)`    | Hashed refresh token, Unique                    |
 | `expires_at` | `TIMESTAMP`       | Token expiration time                          |
 | `created_at` | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                   |
 
@@ -337,8 +337,8 @@ till now i define the databases means i decided the number of tables and the att
 | ----------------- | ----------------- | ------------------------------------------------------ |
 | `id`              | `UUID` / `BIGINT` | Primary Key                                            |
 | `user_id`         | `UUID` / `BIGINT` | Foreign Key → `auth_users(id)` `ON DELETE CASCADE`    |
-| `provider`        | `VARCHAR(50)`     | e.g., `'google'`, `'github'`, `'facebook'`            |
-| `provider_user_id`| `VARCHAR(255)`    | User ID from the external OAuth provider              |
+| `provider`        | `text(50)`     | e.g., `'google'`, `'github'`, `'facebook'`            |
+| `provider_user_id`| `text(255)`    | User ID from the external OAuth provider              |
 | `created_at`      | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                          |
 | *Unique Constraint* |                   | `(provider, provider_user_id)` composite unique key   |
 
@@ -350,7 +350,7 @@ till now i define the databases means i decided the number of tables and the att
 | ------------ | ----------------- | -------------------------------------------------- |
 | `id`         | `UUID` / `BIGINT` | Primary Key                                        |
 | `user_id`    | `UUID` / `BIGINT` | Foreign Key → `auth_users(id)` `ON DELETE CASCADE`|
-| `token_hash` | `VARCHAR(255)`    | Hashed reset token, Unique                        |
+| `token_hash` | `text(255)`    | Hashed reset token, Unique                        |
 | `expires_at` | `TIMESTAMP`       | Token expiration time                            |
 | `used_at`    | `TIMESTAMP`       | Nullable – set when the token is consumed        |
 | `created_at` | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                     |
@@ -363,7 +363,7 @@ till now i define the databases means i decided the number of tables and the att
 | ------------- | ----------------- | --------------------------------------------------- |
 | `id`          | `UUID` / `BIGINT` | Primary Key                                         |
 | `user_id`     | `UUID` / `BIGINT` | Foreign Key → `auth_users(id)` `ON DELETE CASCADE` |
-| `token_hash`  | `VARCHAR(255)`    | Hashed verification token, Unique                  |
+| `token_hash`  | `text(255)`    | Hashed verification token, Unique                  |
 | `expires_at`  | `TIMESTAMP`       | Token expiration time                             |
 | `verified_at` | `TIMESTAMP`       | Nullable – set when email is successfully verified |
 | `created_at`  | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                      |  
@@ -377,11 +377,11 @@ till now i define the databases means i decided the number of tables and the att
 | Column             | Type              | Constraints / Description                                                         |
 | ------------------ | ----------------- | --------------------------------------------------------------------------------- |
 | `user_id`          | `UUID` / `BIGINT` | Primary Key – manually set to the same value as `auth_users.id` (no formal FK)   |
-| `first_name`       | `VARCHAR(100)`    |                                                                                   |
-| `last_name`        | `VARCHAR(100)`    |                                                                                   |
-| `phone`            | `VARCHAR(20)`     | Nullable                                                                          |
+| `first_name`       | `text(100)`    |                                                                                   |
+| `last_name`        | `text(100)`    |                                                                                   |
+| `phone`            | `text(20)`     | Nullable                                                                          |
 | `date_of_birth`    | `DATE`            | Nullable                                                                          |
-| `gender`           | `VARCHAR(20)`     | Nullable, e.g., `'male'`, `'female'`, `'other'`                                  |
+| `gender`           | `ENUM["MALE", "FEMALE", "OTHER"]`     | Nullable, e.g., `'MALE'`, `'FEMALE'`, `'OTHER'`                                  |
 | `profile_image_url`| `TEXT`            | Nullable                                                                          |
 | `created_at`       | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                                                      |
 | `updated_at`       | `TIMESTAMP`       | Auto-updated on row change                                                        |
@@ -394,9 +394,9 @@ till now i define the databases means i decided the number of tables and the att
 | --------- | ----------------- | ----------------------------------------------------------------- |
 | `id`      | `UUID` / `BIGINT` | Primary Key                                                       |
 | `user_id` | `UUID` / `BIGINT` | Foreign Key → `user_profiles(user_id)` `ON DELETE CASCADE`       |
-| `name`    | `VARCHAR(100)`    | Full name of the passenger (e.g., family member)                 |
+| `name`    | `text(100)`    | Full name of the passenger (e.g., family member)                 |
 | `age`     | `INT`             | Nullable                                                          |
-| `gender`  | `VARCHAR(20)`     | Nullable, e.g., `'male'`, `'female'`, `'other'`                  |
+| `gender`  | `text(20)`     | Nullable, e.g., `'male'`, `'female'`, `'other'`                  |
 | *Note*    |                   | This table stores additional passengers, not the primary account holder |
 
 ---
@@ -407,11 +407,11 @@ till now i define the databases means i decided the number of tables and the att
 | -------------- | ----------------- | ----------------------------------------------------------- |
 | `id`           | `UUID` / `BIGINT` | Primary Key                                                 |
 | `user_id`      | `UUID` / `BIGINT` | Foreign Key → `user_profiles(user_id)` `ON DELETE CASCADE` |
-| `label`        | `VARCHAR(50)`     | e.g., `'Home'`, `'Office'`, `'Weekend House'`              |
-| `address_line1`| `VARCHAR(255)`    |                                                             |
-| `city`         | `VARCHAR(100)`    |                                                             |
-| `state`        | `VARCHAR(100)`    |                                                             |
-| `pincode`      | `VARCHAR(20)`     |                                                             |
+| `label`        | `ENUM["HOME", "OFFICE", "WEEKEND_HOUSE"]`     | e.g., `'Home'`, `'Office'`, `'Weekend House'`              |
+| `address_line1`| `text(255)`    |                                                             |
+| `city`         | `text(100)`    |                                                             |
+| `state`        | `text(100)`    |                                                             |
+| `pincode`      | `text(6)`     | and this is fixed, because in India having only 6 digit pin code  |
 
 ---
 
@@ -421,7 +421,7 @@ till now i define the databases means i decided the number of tables and the att
 | --------------------- | ----------------- | ----------------------------------------------------------- |
 | `id`                  | `UUID` / `BIGINT` | Primary Key                                                 |
 | `user_id`             | `UUID` / `BIGINT` | Foreign Key → `user_profiles(user_id)` `ON DELETE CASCADE` |
-| `language`            | `VARCHAR(10)`     | e.g., `'en'`, `'es'`, `'fr'` – Nullable, default `'en'`    |
+| `language`            | `text(10)`     | e.g., `'en'`, `'es'`, `'fr'` – Nullable, default `'en'`    |
 | `notification_email`  | `BOOLEAN`         | Default: `true`                                             |
 | `notification_sms`    | `BOOLEAN`         | Default: `true`                                             |  
 
