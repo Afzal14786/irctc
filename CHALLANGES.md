@@ -254,3 +254,194 @@ services/auth-service/
     - the real question is how we can saperate the tables means is authentication and user tables is going to be seprate ?
     - or how we gonna decide things will handle and store and exactly what are the `attributes` we gonna define and definitely we are going to use AI here to understand the sepration of tables and implementation in a **micro services architecture**.  
 
+- every we have to first code some common files which help us while coding these services like `logger`, `api-responses` and all the `errors` and other common `middlewares`. 
+---  
+
+### Answer ?? 
+
+**So let decide first, for what the authentication service is responsible for ?**  
+The authentication service is responsible for : 
+- Authentication
+- Authorization
+- Password Storing 
+- Session Management
+- JWT / Refresh Token handling
+- OAuth 
+- Password Reset
+- Email Verification
+
+**and what the user-service is responsible for**  
+
+- view profile
+- Personal Details management -- user should able to update their profile
+- view booking history  
+
+---  
+
+### work flow and methods we are going to implement here ..  
+
+To understand this in a better way I go through this article which explain how exactly the tables and databases manages in a microservics codebase .  
+
+- Article URL : [microservices-authn-authz-part-1](https://microservices.io/post/architecture/2025/04/25/microservices-authn-authz-part-1-introduction.html) 
+
+> abhi 3 hrs ho chuke hai or ek line of code tk nhi likha hai. It's really hacktic and fucking worst . But i force my brain to do it any how. but fuckig do it 
+
+till now i define the databases means i decided the number of tables and the attributes each table can have . But now still i have to decide how the tables within two different services communicated, and how two tables within the same services going to comminucates :  
+
+**example**  
+
+- as per design principle we should never consider **foreign key** when two tables communicate with two different services tables for *example :* 
+    - refresh_token tables need's to check the **user_id** of the **user** and this **user_id** reside in the **user_table** which is in the ***user_service*** although they are having the *same physical database* (in current design patten) but it is good to avoid **foreign key** here so we can **scale** this database latter easily and having one database for each service.  
+
+    - and the other issue is at what moment within the same service two tables are going to communicate.
+    **for example :** 
+        - let say user is going to update their profile or consider some other scenarios.
+
+- **So this is what i currently I want to know and exploring things step by step**  
+
+### Finally we designed the tables and we break down each tables and decide the attributes ... here is the break down ...   
+
+**Auth Service Tables**
+
+#### auth_users
+
+| Column            | Type                     | Constraints / Description                               |
+| ----------------- | ------------------------ | ------------------------------------------------------- |
+| `id`              | `UUID` / `BIGINT`        | Primary Key                                             |
+| `email`           | `VARCHAR(255)`           | Unique, Not Null                                        |
+| `password_hash`   | `VARCHAR(255)`           | Hashed password                                         |
+| `is_email_verified`| `BOOLEAN`                | Default: `false`                                        |
+| `role`            | `VARCHAR(50)`            | e.g., `'admin'`, `'user'`                               |
+| `status`          | `VARCHAR(50)`            | e.g., `'active'`, `'suspended'`, `'banned'`            |
+| `last_login_at`   | `TIMESTAMP`              | Nullable                                                |
+| `created_at`      | `TIMESTAMP`              | Default: `CURRENT_TIMESTAMP`                            |
+| `updated_at`      | `TIMESTAMP`              | Auto-updated on row change                              |
+
+---
+
+#### refresh_tokens
+
+| Column       | Type              | Constraints / Description                       |
+| ------------ | ----------------- | ----------------------------------------------- |
+| `id`         | `UUID` / `BIGINT` | Primary Key                                     |
+| `user_id`    | `UUID` / `BIGINT` | Foreign Key → `auth_users(id)` `ON DELETE CASCADE` |
+| `token_hash` | `VARCHAR(255)`    | Hashed refresh token, Unique                    |
+| `expires_at` | `TIMESTAMP`       | Token expiration time                          |
+| `created_at` | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                   |
+
+---
+
+#### oauth_accounts
+
+| Column            | Type              | Constraints / Description                              |
+| ----------------- | ----------------- | ------------------------------------------------------ |
+| `id`              | `UUID` / `BIGINT` | Primary Key                                            |
+| `user_id`         | `UUID` / `BIGINT` | Foreign Key → `auth_users(id)` `ON DELETE CASCADE`    |
+| `provider`        | `VARCHAR(50)`     | e.g., `'google'`, `'github'`, `'facebook'`            |
+| `provider_user_id`| `VARCHAR(255)`    | User ID from the external OAuth provider              |
+| `created_at`      | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                          |
+| *Unique Constraint* |                   | `(provider, provider_user_id)` composite unique key   |
+
+---
+
+#### password_reset_tokens
+
+| Column       | Type              | Constraints / Description                          |
+| ------------ | ----------------- | -------------------------------------------------- |
+| `id`         | `UUID` / `BIGINT` | Primary Key                                        |
+| `user_id`    | `UUID` / `BIGINT` | Foreign Key → `auth_users(id)` `ON DELETE CASCADE`|
+| `token_hash` | `VARCHAR(255)`    | Hashed reset token, Unique                        |
+| `expires_at` | `TIMESTAMP`       | Token expiration time                            |
+| `used_at`    | `TIMESTAMP`       | Nullable – set when the token is consumed        |
+| `created_at` | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                     |
+
+---
+
+#### email_verification_tokens
+
+| Column        | Type              | Constraints / Description                           |
+| ------------- | ----------------- | --------------------------------------------------- |
+| `id`          | `UUID` / `BIGINT` | Primary Key                                         |
+| `user_id`     | `UUID` / `BIGINT` | Foreign Key → `auth_users(id)` `ON DELETE CASCADE` |
+| `token_hash`  | `VARCHAR(255)`    | Hashed verification token, Unique                  |
+| `expires_at`  | `TIMESTAMP`       | Token expiration time                             |
+| `verified_at` | `TIMESTAMP`       | Nullable – set when email is successfully verified |
+| `created_at`  | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                      |  
+
+---  
+
+**User Service Tables**
+
+#### user_profiles
+
+| Column             | Type              | Constraints / Description                                                         |
+| ------------------ | ----------------- | --------------------------------------------------------------------------------- |
+| `user_id`          | `UUID` / `BIGINT` | Primary Key – manually set to the same value as `auth_users.id` (no formal FK)   |
+| `first_name`       | `VARCHAR(100)`    |                                                                                   |
+| `last_name`        | `VARCHAR(100)`    |                                                                                   |
+| `phone`            | `VARCHAR(20)`     | Nullable                                                                          |
+| `date_of_birth`    | `DATE`            | Nullable                                                                          |
+| `gender`           | `VARCHAR(20)`     | Nullable, e.g., `'male'`, `'female'`, `'other'`                                  |
+| `profile_image_url`| `TEXT`            | Nullable                                                                          |
+| `created_at`       | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                                                      |
+| `updated_at`       | `TIMESTAMP`       | Auto-updated on row change                                                        |
+
+---
+
+#### passenger_profiles
+
+| Column    | Type              | Constraints / Description                                         |
+| --------- | ----------------- | ----------------------------------------------------------------- |
+| `id`      | `UUID` / `BIGINT` | Primary Key                                                       |
+| `user_id` | `UUID` / `BIGINT` | Foreign Key → `user_profiles(user_id)` `ON DELETE CASCADE`       |
+| `name`    | `VARCHAR(100)`    | Full name of the passenger (e.g., family member)                 |
+| `age`     | `INT`             | Nullable                                                          |
+| `gender`  | `VARCHAR(20)`     | Nullable, e.g., `'male'`, `'female'`, `'other'`                  |
+| *Note*    |                   | This table stores additional passengers, not the primary account holder |
+
+---
+
+#### user_addresses
+
+| Column         | Type              | Constraints / Description                                   |
+| -------------- | ----------------- | ----------------------------------------------------------- |
+| `id`           | `UUID` / `BIGINT` | Primary Key                                                 |
+| `user_id`      | `UUID` / `BIGINT` | Foreign Key → `user_profiles(user_id)` `ON DELETE CASCADE` |
+| `label`        | `VARCHAR(50)`     | e.g., `'Home'`, `'Office'`, `'Weekend House'`              |
+| `address_line1`| `VARCHAR(255)`    |                                                             |
+| `city`         | `VARCHAR(100)`    |                                                             |
+| `state`        | `VARCHAR(100)`    |                                                             |
+| `pincode`      | `VARCHAR(20)`     |                                                             |
+
+---
+
+#### user_preferences (we'll implement this latters)
+
+| Column                | Type              | Constraints / Description                                   |
+| --------------------- | ----------------- | ----------------------------------------------------------- |
+| `id`                  | `UUID` / `BIGINT` | Primary Key                                                 |
+| `user_id`             | `UUID` / `BIGINT` | Foreign Key → `user_profiles(user_id)` `ON DELETE CASCADE` |
+| `language`            | `VARCHAR(10)`     | e.g., `'en'`, `'es'`, `'fr'` – Nullable, default `'en'`    |
+| `notification_email`  | `BOOLEAN`         | Default: `true`                                             |
+| `notification_sms`    | `BOOLEAN`         | Default: `true`                                             |  
+
+---  
+
+### The why ? behind this desing for now  
+
+We choose this design because splitting the tables give me more clear picture of the work flow of the system and to keep things seprate. 
+
+So I break down this into multiple tables.  
+
+- Credentials (auth) and profile (user) are split by ownership — security-sensitive vs. general data.
+- `role`/`status` sit in auth because they're read from the JWT on every request, no DB call needed.  
+- `oauth_accounts` is its own table so one account can link multiple login methods.  
+- `refresh_tokens`, `password_reset_tokens`, `email_verification_tokens` are separate from `auth_users` because each is per-session or per-token, not per-user singular.
+- `user_profiles.user_id` is the PK itself — always exactly 1:1 with an auth user, no redundant id.
+- Real FK within a service, none across services — same reasoning as before, just not repeating it all here.  
+
+> note : to understand the desing pattern and understanding the splitting the database we take help from `claud` . You can refer the chat link : [Claud Chat Link](https://claude.ai/share/47c7f1a3-5cc8-46b3-9101-2614d5924db0)  
+
+**_now it's time to code, let first design the schemas then we'll move and code some basic middlewares like logger's limiters and role.middlewares and so on, then we'll actually code the auth and user service, but first i'll code the auth-service then move to the user-service. let's code this now_**  
+
+---  
