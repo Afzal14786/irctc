@@ -4,7 +4,7 @@
  * @description this contais the password_reset_tokens details when user request for any token for reset password
  */
 
-import { pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, text, uuid } from "drizzle-orm/pg-core";
 import auth_user from "./schema.auth_users.js";
 
 export const password_reset_tokens = pgTable("password_reset_tokens", {

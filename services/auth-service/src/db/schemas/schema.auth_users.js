@@ -13,12 +13,8 @@ import {
   text,
 } from "drizzle-orm/pg-core";
 
-export const USER_ROLE_ENUM = pgEnum("user_role", ["admin", "user"]);
-export const USER_STATUS_ENUM = pgEnum("user_status", [
-  "active",
-  "suspended",
-  "banned",
-]);
+import { USER_ROLE_ENUM } from "./enums.js";
+import { USER_STATUS_ENUM } from "./enums.js";
 
 export const auth_users = pgTable("auth_users", {
   id: uuid("id").primaryKey().defaultRandom(),

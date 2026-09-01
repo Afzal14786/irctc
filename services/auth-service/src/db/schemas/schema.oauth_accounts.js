@@ -14,12 +14,7 @@ import {
 } from "drizzle-orm/pg-core";
 import auth_user from "./schema.auth_users.js";
 
-export const OAUTH_PROVIDER_ENUM = pgEnum("provider", [
-  "google",
-  "facebook",
-  "github",
-  "local",
-]);
+import { OAUTH_PROVIDER_ENUM } from "./enums.js";
 
 export const oauth_accounts = pgTable(
   "oauth_accounts",
