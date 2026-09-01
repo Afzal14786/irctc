@@ -337,7 +337,7 @@ till now i define the databases means i decided the number of tables and the att
 | ----------------- | ----------------- | ------------------------------------------------------ |
 | `id`              | `UUID` / `BIGINT` | Primary Key                                            |
 | `user_id`         | `UUID` / `BIGINT` | Foreign Key → `auth_users(id)` `ON DELETE CASCADE`    |
-| `provider`        | `text(50)`     | e.g., `'google'`, `'github'`, `'facebook'`            |
+| `provider`        | `ENUM["local", "google"]`     | e.g., `'google'`, `'local'`, `'facebook'`            |
 | `provider_user_id`| `text(255)`    | User ID from the external OAuth provider              |
 | `created_at`      | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                          |
 | *Unique Constraint* |                   | `(provider, provider_user_id)` composite unique key   |
@@ -367,6 +367,45 @@ till now i define the databases means i decided the number of tables and the att
 | `expires_at`  | `TIMESTAMP`       | Token expiration time                             |
 | `verified_at` | `TIMESTAMP`       | Nullable – set when email is successfully verified |
 | `created_at`  | `TIMESTAMP`       | Default: `CURRENT_TIMESTAMP`                      |  
+
+
+**note** : the current table desing of this auth-service supports multiple sessions per user  
+
+**example**  
+```text
+Afzal logs in from laptop
+          ↓
+refresh token A
+
+Afzal logs in from phone
+          ↓
+refresh token B
+
+Afzal logs in from browser
+          ↓
+refresh token C
+```  
+
+**Database looks like**  
+
+```markdown
+refresh_tokens
+
+id    user_id    token_hash    expires_at
+------------------------------------------
+1     user-A     hash-A        ...
+2     user-A     hash-B        ...
+3     user-A     hash-C        ...
+```  
+
+**It gives me the option to later implement:**  
+
+```markdown
+Logout current session
+Logout all sessions
+Revoke one session
+List active sessions
+```  
 
 ---  
 
