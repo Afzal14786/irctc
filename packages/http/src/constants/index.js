@@ -1,3 +1,3 @@
 export {API_STATUS} from "./api-status";
 export {HTTP_CODES} from "./http-codes";
-export {sendError, sendResponse} from "../api-responses";
+export {send_error, send_response} from "../api-responses";
