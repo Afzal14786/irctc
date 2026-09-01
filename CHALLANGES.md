@@ -685,3 +685,51 @@ So I break down this into multiple tables.
 **_now it's time to code, let first design the schemas then we'll move and code some basic middlewares like logger's limiters and role.middlewares and so on, then we'll actually code the auth and user service, but first i'll code the auth-service then move to the user-service. let's code this now_**  
 
 ---  
+
+**Now it is 21:05 PM, let's go ahead and code the common files which are necessary to code first before implementing the services**  
+
+- i'll first code the logger file which is going to use accross the services and then the middlewares
+- faa we fix this logger issue and finally this is working now and easily we are integrating it with other services 
+- yes for fixing this i took help from chatgpt and since i am familier for the very first time with this logger's things using `pino` module so we also took help in orgenizing the file and folders and coding of the some parts.  
+- this is how the auth service logs look like while running :  
+
+```log
+➜  backend git:(master) ✗ pnpm dev:auth                           
+$ pnpm --filter @irctc/auth-service dev
+$ nodemon src/server.js
+[nodemon] 3.1.14
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,cjs,json
+[nodemon] starting `node src/server.js`
+◇ injected env (4) from ../../.env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+[02:19:07.066] INFO: Authentication Service | Server Running on 4001
+    host: "0x4f5a4c"
+    service: "AUTH_SERVICE"
+    env: "development"
+    version: "1.0.0"
+
+```  
+---  
+
+```markdown
+[02:21:55.102] INFO: HTTP request completed
+    host: "0x4f5a4c"
+    service: "AUTH_SERVICE"
+    env: "development"
+    version: "1.0.0"
+    request_id: "f4d4f5aa-789d-406c-b0e9-765292682394"
+    req: {
+      "id": "f4d4f5aa-789d-406c-b0e9-765292682394",
+      "method": "GET",
+      "url": "/favicon.ico",
+      "path": "/favicon.ico",
+      "query": {},
+      "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.134.0 Chrome/148.0.7778.280 Electron/42.8.1 Safari/537.36",
+      "remote_address": "::1"
+    }
+    response: {
+      "status_code": 404
+    }
+    response_time_ms: 6.89
+```  
