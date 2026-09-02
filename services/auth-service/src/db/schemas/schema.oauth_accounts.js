@@ -4,14 +4,7 @@
  * @description this file handles the oauth_accounts manamenges
  */
 
-import {
-  pgEnum,
-  pgTable,
-  text,
-  timestamp,
-  unique,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 import auth_user from "./schema.auth_users.js";
 
 import { OAUTH_PROVIDER_ENUM } from "./enums.js";

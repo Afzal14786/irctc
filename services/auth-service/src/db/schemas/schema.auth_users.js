@@ -4,14 +4,7 @@
  * @description this file contains the schema design of the authenicatin.
  */
 
-import {
-  pgTable,
-  uuid,
-  pgEnum,
-  boolean,
-  timestamp,
-  text,
-} from "drizzle-orm/pg-core";
+import { pgTable, uuid, boolean, timestamp, text } from "drizzle-orm/pg-core";
 
 import { USER_ROLE_ENUM } from "./enums.js";
 import { USER_STATUS_ENUM } from "./enums.js";
