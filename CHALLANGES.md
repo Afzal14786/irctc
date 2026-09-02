@@ -693,7 +693,7 @@ So I break down this into multiple tables.
 - yes for fixing this i took help from chatgpt and since i am familier for the very first time with this logger's things using `pino` module so we also took help in orgenizing the file and folders and coding of the some parts.  
 - this is how the auth service logs look like while running :  
 
-```log
+```javascript
 ➜  backend git:(master) ✗ pnpm dev:auth                           
 $ pnpm --filter @irctc/auth-service dev
 $ nodemon src/server.js
@@ -712,7 +712,7 @@ $ nodemon src/server.js
 ```  
 ---  
 
-```markdown
+```javascript
 [02:21:55.102] INFO: HTTP request completed
     host: "0x4f5a4c"
     service: "AUTH_SERVICE"
@@ -736,3 +736,50 @@ $ nodemon src/server.js
 ---  
 
 we till now we coded the middlewares and to understand the architecture of packages in a micro service architecture i took help from chatgpt and also to understand some coding part -- sikh rha hu bhai abhi ...   
+
+---  
+
+- abhi bj rahe hai subha ke 4:54 AM, 3 September 2026 and still I am coding this project, and abhi tk hame jo code kiya wo hai  
+- niche mention sari file jo aaj raat abhi tk implement hui 
+
+```javascript
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   packages/database/migrations/meta/_journal.json
+        modified:   packages/redis/src/index.js
+        modified:   packages/redis/src/redis/client.js
+        modified:   packages/redis/src/redis/connection.js
+        modified:   pnpm-lock.yaml
+        modified:   pnpm-workspace.yaml
+        modified:   services/auth-service/package.json
+        modified:   services/auth-service/src/config/env.js
+        modified:   services/auth-service/src/config/logger.js
+        modified:   services/auth-service/src/db/index.js
+        deleted:    services/auth-service/src/db/repositories/.txt
+        modified:   services/auth-service/src/db/schemas/schema.auth_users.js
+        modified:   services/auth-service/src/db/schemas/schema.oauth_accounts.js
+        modified:   services/auth-service/src/db/schemas/schema.refresh_tokens.js
+        deleted:    services/auth-service/src/db/schemas/text.txt
+        modified:   services/auth-service/src/server.js
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        packages/database/migrations/0001_friendly_angel.sql
+        packages/database/migrations/meta/0001_snapshot.json
+        services/auth-service/src/config/cookie.config.js
+        services/auth-service/src/config/jwt.config.js
+        services/auth-service/src/constants/
+        services/auth-service/src/db/repositories/index.js
+        services/auth-service/src/db/repositories/oauth.repository.js
+        services/auth-service/src/db/repositories/password-reset.repository.js
+        services/auth-service/src/db/repositories/refresh-token.repository.js
+        services/auth-service/src/db/repositories/user.repository.js
+        services/auth-service/src/db/repositories/verification.repository.js
+        services/auth-service/src/routes/
+        services/auth-service/src/schemas/
+        services/auth-service/src/services/
+        services/auth-service/src/utils/
+```  
+
+## Chalo sote hai Good Ny8 😴️😪️  
