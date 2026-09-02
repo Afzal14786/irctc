@@ -733,3 +733,6 @@ $ nodemon src/server.js
     }
     response_time_ms: 6.89
 ```  
+---  
+
+we till now we coded the middlewares and to understand the architecture of packages in a micro service architecture i took help from chatgpt and also to understand some coding part -- sikh rha hu bhai abhi ...   
