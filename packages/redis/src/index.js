@@ -3,8 +3,7 @@ export {
 } from "./redis/client.js";
 
 export {
-    connect_redis,
-    disconnect_redis,
+    redis_client_service
 } from "./redis/connection.js";
 
 export {

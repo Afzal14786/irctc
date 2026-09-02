@@ -1,24 +1,42 @@
 import { redis_client } from "./client.js";
 
-export const connect_redis = async () => {
-    if (
-        redis_client.status === "ready" ||
-        redis_client.status === "connecting"
-    ) {
-        return redis_client;
+export class RedisClientService {
+  constructor(redis_client) {
+    if (!redis_client) {
+      throw new Error("Redis client requires a valid instance");
     }
 
-    await redis_client.connect();
+    this.redis_client = redis_client;
+    this.connecting = null;
+  }
 
-    return redis_client;
-};
-
-export const disconnect_redis = async () => {
-    if (
-        redis_client.status === "end"
-    ) {
-        return;
+  async connect_redis() {
+    if (this.redis_client.status === "ready") {
+      return this.redis_client;
     }
 
-    await redis_client.quit();
-};
+    if (this.connecting) {
+      return this.connecting;
+    }
+
+    this.connecting = this.redis_client
+      .connect()
+      .then(() => this.redis_client)
+      .finally(() => {
+        this.connecting = null;
+      });
+
+    return this.connecting;
+  }
+
+  async disconnect_redis() {
+    if (this.redis_client.status === "end") {
+      return;
+    }
+
+    await this.redis_client.quit();
+  }
+}
+
+export const redis_client_service = new RedisClientService(redis_client);
+export default redis_client_service;
